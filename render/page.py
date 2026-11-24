@@ -307,18 +307,22 @@ def build(path):
             "grid needs %.0fpx but has %.0fpx" % (tallest, avail)
         )
 
+    ftag = font(SANS_B, 6.5)
     for c, col in enumerate(columns):
         cx = MARGIN + c * (col_w + gutter)
         if c:
             hairline(d, cx - gutter / 2, grid_top, grid_bottom, RULE)
         sy = grid_top
         for code, hl, bl, _h in col:
-            tracked(d, (cx, sy), dict(facts.REGIONS)[code], font(SANS_B, 7), RED, track=0.8)
-            sy += 10
             sy = draw_lines(d, cx, sy, hl, fhk, INK, 13, 2, "brief headline")
             sy += 2
             sy = draw_lines(d, cx, sy, bl, fbt, GREY, 11.5, 3, "brief deck")
-            sy += 5
+            # The region tag closes its brief instead of opening it. A label
+            # above the first brief of a column reads as a column header, and
+            # then contradicts every story below it that is from elsewhere.
+            d.text((cx + col_w, sy + 1), dict(facts.REGIONS)[code],
+                   font=ftag, fill=RED, anchor="ra")
+            sy += 11
 
     # ---- region index, computed and reconciled
     counts = {}
