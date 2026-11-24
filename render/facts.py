@@ -142,5 +142,5 @@ BRIEFS = [
     ("AF", "UN food chief warns over attacks on grain ships"),
 ]
 
-FOOTER = ("Every line is from reporting of 24 November 2026. Claims by a party "
-          "are tagged as that party's claim.")
+FOOTER = ("Every line is from reporting filed between 23 and 24 November 2026. "
+          "Claims by a party are tagged as that party's claim.")

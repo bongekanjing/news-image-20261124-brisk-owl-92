@@ -274,7 +274,7 @@ def build(path):
     cols = 3
     gap = 10
     cw = (MEASURE - (cols - 1) * gap) / cols
-    fh = font(SERIF_B, 10.4)
+    fh = font(SERIF_B, 11.6)
     fsm = font(SANS_B, 6.0)
     rows = (len(rest) + cols - 1) // cols
     chip = 46
@@ -299,13 +299,39 @@ def build(path):
     lead_b = 13.6
     deepest = max(len(wrap(d, "\u00b7 " + t, f_b, bw, 2)) for _, t in facts.BRIEFS)
     brief_row = deepest * lead_b + 9
-    band_h = 16 + per * brief_row
 
     footer_y = H - 40
-    # rows of cards absorb the slack the briefs leave, within a sane range
+    # Rows are sized to their own content and the slack is spent on the card
+    # decks, not on padding: widening the gaps between rows is what left three
+    # 30px holes down the page while the decks sat unread.
+    fd_card = font(SERIF, 9.4)
+    deck_h = max(
+        lines_height(wrap(d, r[2], fd_card, cw - chip - 8, 3), 11.6) for r in rest)
+    row_h = max(row_h, chip + 5 + 3 + deck_h + 8)
+
+    # The band and the grid share the space above the footer. Solve for the
+    # brief leading that makes them meet: a fixed leading overflowed the page
+    # by 63px the moment the cards carried decks.
+    band_fixed = 16
+    avail_band = footer_y - 13 - y - rows * row_h
+    fit_row = (avail_band - band_fixed) / per
+    if fit_row < brief_row:
+        # tighten the leading only as far as it stays readable, then take the
+        # remainder out of the card rows instead of running past the footer
+        brief_row = max(fit_row, deepest * 11.4 + 6)
+        band_h = band_fixed + per * brief_row
+        over = (y + rows * row_h + 13 + band_h) - footer_y
+        if over > 0:
+            row_h -= over / rows
+    band_h = band_fixed + per * brief_row
     slack = footer_y - (y + rows * row_h) - band_h - 13
     if slack > 0:
         row_h += min(slack / rows, 26)
+    band_h = band_fixed + per * brief_row
+    assert y + rows * row_h + 13 + band_h <= footer_y + 1, (
+        "the page overflows its footer by %.1fpx: %d brief rows at %.1f and %d "
+        "card rows at %.1f" % (y + rows * row_h + 13 + band_h - footer_y,
+                               per, brief_row, rows, row_h))
 
     for idx, (code, head, deck, status, field, symbol) in enumerate(rest):
         r, c = divmod(idx, cols)
@@ -316,7 +342,9 @@ def build(path):
         tx = cx + chip + 8
         hl = wrap(d, head, fh, cw - chip - 8, 3)
         ty = draw_lines(d, tx, cy, hl, fh, INK, 11.8, 3, "card headline")
-        d.text((tx, ty + 2), status, font=font(SANS_B, 5.9),
+        ty = draw_lines(d, tx, ty + 2, wrap(d, deck, fd_card, cw - chip - 8, 3),
+                        fd_card, GREY, 11.6, 3, "card deck")
+        d.text((tx, ty + 3), status, font=font(SANS_B, 5.9),
                fill={"CONFIRMED": INK, "OFFICIAL": NAVY,
                      "REPORTED": GREY, "CLAIM": RED}.get(status, GREY))
     y += rows * row_h
@@ -329,7 +357,7 @@ def build(path):
     # a stretched band leaves a hole under whichever column is shortest
     band_bottom = band_top + band_h
 
-    d.text((MARGIN, y), "ALSO THIS %s" % facts.DATE_KICKER,
+    d.text((MARGIN, y), "ALSO IN THE LAST 24 HOURS",
            font=font(SANS_B, 9.4), fill=RED)
     y += 16
     for i, (code, text) in enumerate(facts.BRIEFS):
