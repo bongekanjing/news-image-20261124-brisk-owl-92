@@ -9,15 +9,17 @@ reader can check it rather than trust it.
 
 ## What the page carries
 
-- **The date as the largest object on the page**, set across the full measure,
-  because "one day, one page" is the claim the whole sheet rests on.
+- **One banner headline** set at display size across the measure, because a
+  front page is a judgement about what mattered, and the date is a fact the
+  reader already knows: the date takes dateline scale, the lead story takes the
+  display type.
 - **A walk across the day**, hour by hour from a board meeting before dawn in
   Wellington to the closing bell in New York, so the day reads as a duration
   rather than a list.
-- **Six hard figures**, each with a caption that says what is being counted.
-- **Three illustrated leads**: Nvidia reinstating Jensen Huang and the 31.5%
-  jump; COP31 closing in Antalya with no agreement; three tankers mined in the
-  Strait of Hormuz.
+- **Six hard figures**, each with a caption that says what is being counted,
+  none of them a number the banner already carries.
+- **Two illustrated features**: COP31 closing in Antalya with no agreement, and
+  three tankers mined in the Strait of Hormuz.
 - **Nine further cards** and **fourteen single-line briefs**, every one of them
   numbered, so the total printed at the top can be counted against the page.
 - **A region ledger** whose counts are computed from the story list, so the

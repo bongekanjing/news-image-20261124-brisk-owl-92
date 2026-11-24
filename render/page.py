@@ -156,22 +156,42 @@ def build(path):
     d.text((MARGIN, y), claim, font=font(SANS_B, 8.6), fill=RED)
     y += 15
 
-    # ---------------- the date, the hero
-    tracked(d, (MARGIN, y), facts.DATE_KICKER, font(SANS_B, 16), RED, track=5.5)
-    y += 21
-    size = fit_size(d, facts.DATE_MAIN, SERIF_B, 88, 50, MEASURE)
-    f_date = font(SERIF_B, size)
-    d.text((MARGIN, y - 8), facts.DATE_MAIN, font=f_date, fill=INK)
-    asc, desc = f_date.getmetrics()
-    y += asc + desc - 14
+    # ---------------- the date, as a dateline over a banner headline
+    # A front page's loudest object has to be the day's most important fact.
+    # The date is a fact the reader already knows, so it gets dateline scale and
+    # the lead story gets the display type: the page then says what mattered,
+    # which is the one judgement a front page exists to make.
+    kicker = "%s  \u00b7  %s" % (facts.DATE_KICKER, facts.DATE_MAIN)
+    tracked(d, (MARGIN, y), kicker, font(SANS_B, 8.4), RED, track=2.0)
+    y += 15
+
+    code, lead_head, lead_deck, lead_status, lead_field, lead_symbol = facts.STORIES[0]
+    # the largest size at which the banner still sets in two lines or fewer
+    size = 22
+    for trial in range(64, 21, -1):
+        tf = font(SERIF_B, trial)
+        if len(wrap(d, lead_head, tf, MEASURE, 2)) <= 2:
+            size = trial
+            break
+    f_lead = font(SERIF_B, size)
+    lead_lines = wrap(d, lead_head, f_lead, MEASURE, 2)
+    lead_ascent, lead_descent = f_lead.getmetrics()
+    lead_step = lead_ascent + lead_descent - size * 0.30
+    for ln in lead_lines:
+        d.text((MARGIN, y - size * 0.10), ln, font=f_lead, fill=INK)
+        y += lead_step
+    y += 2
+    # the lead's own tag row, beneath the banner
+    number_badge(d, MARGIN + 7, y + 5, 1, r=7)
+    tx = status_tag(d, MARGIN + 19, y, lead_status)
+    d.text((tx + 6, y + 1.5), lead_field.upper(), font=font(SANS_B, 6.2), fill=GREY)
+    y += 15
+    fd_lead = font(SERIF, 11.0)
+    lead_deck_lines = wrap(d, lead_deck, fd_lead, MEASURE, 3)
+    draw_lines(d, MARGIN, y, lead_deck_lines, fd_lead, INK, 14.6, 3, "lead deck")
+    y += 14.6 * len(lead_deck_lines) + 4
     rule(d, y, 3, INK)
     y += 8
-
-    # ---------------- standfirst
-    fs = font(SERIF, 12.5)
-    dl = wrap(d, facts.DECK, fs, MEASURE * 0.80, 3)
-    y = draw_lines(d, MARGIN, y, dl, fs, INK, 16, 3, "deck")
-    y += 5
 
     # ---------------- the clock
     rule(d, y, 1, GREY)
@@ -211,39 +231,39 @@ def build(path):
     rule(d, y, 1.5, INK)
     y += 7
 
-    # ---------------- featured cards
-    leads = facts.STORIES[:3]
+    # ---------------- the next two features, as equal cards
+    leads = facts.STORIES[1:3]
     rest = facts.STORIES[3:]
 
-    lead_gap = 10
-    lead_w = (MEASURE - 2 * lead_gap) / 3
-    art_h = 74
-    # measure the tallest lead so all three cards match
-    fh_lead = font(SERIF_B, 12.6)
-    fd_lead = font(SERIF, 7.9)
+    lead_gap = 14
+    lead_w = (MEASURE - lead_gap) / 2
+    art_h = 96
+    # measure the tallest card so both match
+    fh_lead = font(SERIF_B, 15.6)
+    fd_lead = font(SERIF, 9.4)
     lead_blocks = []
     for code, head, deck, status, field, symbol in leads:
         hl = wrap(d, head, fh_lead, lead_w - 2, 3)
-        bl = wrap(d, deck, fd_lead, lead_w - 2, 8)
+        bl = wrap(d, deck, fd_lead, lead_w - 2, 7)
         lead_blocks.append((code, hl, bl, status, field, symbol))
-    lead_h = art_h + 5 + 9 + 3 + max(lines_height(b[1], 14.4) for b in lead_blocks) \
-        + 2 + max(lines_height(b[2], 9.6) for b in lead_blocks) + 4
+    lead_h = art_h + 6 + 10 + 3 + max(lines_height(b[1], 17.6) for b in lead_blocks) \
+        + 3 + max(lines_height(b[2], 11.8) for b in lead_blocks) + 4
 
     for i, (code, hl, bl, status, field, symbol) in enumerate(lead_blocks):
         cx = MARGIN + i * (lead_w + lead_gap)
         # art
         art_box = (cx, y, cx + lead_w, y + art_h)
         draw_symbol(d, art_box, symbol)
-        cy = y + art_h + 5
+        cy = y + art_h + 6
         # tag row: number, field, status
-        number_badge(d, cx + 7, cy + 4, i + 1, r=7)
-        tx = cx + 19
+        number_badge(d, cx + 8, cy + 5, i + 2, r=8)
+        tx = cx + 21
         tx = status_tag(d, tx, cy - 1, status)
-        d.text((tx + 5, cy), field.upper(), font=font(SANS_B, 5.8), fill=GREY)
-        cy += 12
-        cy = draw_lines(d, cx, cy, hl, fh_lead, INK, 14.4, 3, "lead headline")
-        cy += 2
-        cy = draw_lines(d, cx, cy, bl, fd_lead, GREY, 9.6, 8, "lead deck")
+        d.text((tx + 6, cy + 0.5), field.upper(), font=font(SANS_B, 6.4), fill=GREY)
+        cy += 14
+        cy = draw_lines(d, cx, cy, hl, fh_lead, INK, 17.6, 3, "lead headline")
+        cy += 3
+        cy = draw_lines(d, cx, cy, bl, fd_lead, GREY, 11.8, 7, "lead deck")
         if i:
             hairline(d, cx - lead_gap / 2, y, y + lead_h, RULE)
     y += lead_h
@@ -263,6 +283,30 @@ def build(path):
         max(lines_height(wrap(d, r[1], fh, cw - chip - 8, 3), 11.8)
             + 13 for r in rest)
     ) + 8
+
+    # ---------------- measure the closing band before drawing the grid, so the
+    # grid can take up whatever the briefs do not need. The briefs are the last
+    # block on the page; sizing their band first is what stops the third column
+    # leaving a hole under the page.
+    led_w = 158
+    ledger_x = W - MARGIN - led_w
+    brief_w = ledger_x - 14 - MARGIN
+    bcols = 3
+    bgap = 14
+    bw = (brief_w - (bcols - 1) * bgap) / bcols
+    f_b = font(SERIF, 10.4)
+    per = (len(facts.BRIEFS) + bcols - 1) // bcols
+    lead_b = 13.6
+    deepest = max(len(wrap(d, "\u00b7 " + t, f_b, bw, 2)) for _, t in facts.BRIEFS)
+    brief_row = deepest * lead_b + 9
+    band_h = 16 + per * brief_row
+
+    footer_y = H - 40
+    # rows of cards absorb the slack the briefs leave, within a sane range
+    slack = footer_y - (y + rows * row_h) - band_h - 13
+    if slack > 0:
+        row_h += min(slack / rows, 26)
+
     for idx, (code, head, deck, status, field, symbol) in enumerate(rest):
         r, c = divmod(idx, cols)
         cx = MARGIN + c * (cw + gap)
@@ -281,27 +325,23 @@ def build(path):
 
     # ---------------- bottom band: briefs, ledger, date check
     band_top = y
-    band_bottom = H - 40
-    led_w = 158
-    ledger_x = W - MARGIN - led_w
-    brief_w = ledger_x - 14 - MARGIN
+    # the band is as tall as the briefs need, not as tall as the page allows:
+    # a stretched band leaves a hole under whichever column is shortest
+    band_bottom = band_top + band_h
 
     d.text((MARGIN, y), "ALSO THIS %s" % facts.DATE_KICKER,
-           font=font(SANS_B, 8.2), fill=RED)
-    y += 14
-    bcols = 3
-    bgap = 12
-    bw = (brief_w - (bcols - 1) * bgap) / bcols
-    f_b = font(SERIF, 9.2)
-    per = (len(facts.BRIEFS) + bcols - 1) // bcols
-    # one row height for the whole block, so the three columns line up
-    brief_row = 2 * 12.2 + 4
+           font=font(SANS_B, 9.4), fill=RED)
+    y += 16
     for i, (code, text) in enumerate(facts.BRIEFS):
         bc, br = divmod(i, per)
         bx = MARGIN + bc * (bw + bgap)
         by = y + br * brief_row
         bl = wrap(d, "\u00b7 " + text, f_b, bw, 2)
-        draw_lines(d, bx, by, bl, f_b, INK, 12.2, 2, "brief")
+        draw_lines(d, bx, by, bl, f_b, INK, lead_b, 2, "brief")
+        # a hairline between rows, across the first column only: it separates
+        # the rows without chopping the narrow measure into ruled boxes
+        if br and bc == 0:
+            d.rectangle([MARGIN, by - 6, MARGIN + brief_w, by - 5], fill=RULE)
     if y + per * brief_row > band_bottom + 2:
         raise AssertionError("briefs overflow the band by %dpx"
                              % (y + per * brief_row - band_bottom))

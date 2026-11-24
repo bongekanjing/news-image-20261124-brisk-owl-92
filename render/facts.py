@@ -107,11 +107,11 @@ OMITTED = [
 ]
 
 NUMBERS = [
-    ("31.5%", "Nvidia's one-day gain"),
-    ("$900bn", "Value it added"),
+    ("4.7%", "S&P 500, the day's gain"),
+    ("$900bn", "Value Nvidia added"),
     ("3", "Tankers mined"),
     ("1,500km", "Kyiv's strike reach"),
-    ("4,709", "Kospi close"),
+    ("4,709", "Kospi close, down 3.3%"),
     ("25,000", "Flood-hit in Brazil"),
 ]
 
