@@ -151,8 +151,8 @@ def build(path):
     y += 6
 
     # the claim, with its numbers computed from the lists below it
-    claim = "%d STORIES  \u00b7  %d REGIONS  \u00b7  %d FIELDS  \u00b7  EVERY ONE FROM THIS %s" % (
-        n_total, len(facts.REGIONS), n_fields, facts.DATE_KICKER)
+    claim = "%d STORIES  \u00b7  %d REGIONS  \u00b7  %d FIELDS  \u00b7  ALL FILED IN THE LAST 24 HOURS" % (
+        n_total, len(facts.REGIONS), n_fields)
     d.text((MARGIN, y), claim, font=font(SANS_B, 8.6), fill=RED)
     y += 15
 
@@ -196,7 +196,7 @@ def build(path):
     # ---------------- the clock
     rule(d, y, 1, GREY)
     y += 5
-    d.text((MARGIN, y), "THE DAY IN UTC", font=font(SANS_B, 7.2), fill=RED)
+    d.text((MARGIN, y), "THE LAST 24 HOURS, IN UTC", font=font(SANS_B, 7.2), fill=RED)
     y += 12
     tl = facts.TIMELINE
     seg = MEASURE / len(tl)

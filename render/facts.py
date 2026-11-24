@@ -100,10 +100,9 @@ STORIES = [
 # a page that says what it excluded can be trusted about what it kept.
 OMITTED = [
     ("Japan quake rescue", "the 7.6 event was December 2025, not this week"),
-    ("Cikande factory fire", "happened 23 November, outside this day"),
-    ("EU's \u20ac45bn loan to Kyiv", "agreed 18 November"),
+    ("EU's 45bn euro loan to Kyiv", "agreed 18 November"),
     ("Fed minutes", "published 19 November"),
-    ("Aid convoy at Rafah", "reported 22 November"),
+    ("Aid convoy at Rafah", "reported 22 November, not in the window"),
 ]
 
 NUMBERS = [
@@ -133,7 +132,7 @@ BRIEFS = [
     ("ME", "Iran sets terms for reopening the strait"),
     ("AS", "China rejects talk of a 'deflation trap'"),
     ("AS", "Fourteen states acknowledge the ICJ Rohingya ruling"),
-    ("AS", "India and Nepal sign a joint vision document"),
+    ("AS", "Indonesia says 24 died in the Cikande factory fire"),
     ("AS", "Delhi allots the Dalai Lama a government bungalow"),
     ("LA", "Mexico seizes trafficker 'Chapo Isidro'"),
     ("LA", "25,000 displaced by floods in Rio Grande do Sul"),
