@@ -4,37 +4,43 @@
 [![rank](https://make.fun/badge/news-image-20261124/bongekanjing/news-image-20261124-brisk-owl-92/rank.svg)](https://make.fun/bounty/news-image-20261124/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261124)
 [![reward](https://make.fun/badge/news-image-20261124/bongekanjing/news-image-20261124-brisk-owl-92/reward.svg)](https://make.fun/bounty/news-image-20261124?utm_source=github&utm_medium=readme&utm_campaign=news-image-20261124)
 
-One newspaper front page summing up the world news of Tuesday 24 November 2026:
-26 stories across seven regions, the day's six hardest figures, and flat vector
-artwork drawn from primitives.
+One page that sums up the world's news of Tuesday 24 November 2026, built so a
+reader can check it rather than trust it.
 
 ## What the page carries
 
-- **The date as the dominant element**, set across the full measure, so the day is
-  unmistakable at any size.
-- **Two lead stories**: Nvidia's board reinstating Jensen Huang as chief executive
-  and the 31.5% share jump; and COP31 closing in Antalya with no agreement at all,
-  the first failed COP since Copenhagen in 2009.
-- **Six hard figures** — the Nvidia gain, the reach of Kyiv's strike on the
-  Lukoil-Perm refinery, the toll at Dymer, three mined tankers in the Strait of
-  Hormuz, the flood-displaced in Rio Grande do Sul, and the Kospi close.
-- **Twenty-four briefs** across North America, Europe, the Middle East, Asia,
-  Africa, Latin America and Oceania.
-- **A region index whose counts are computed from the story list**, so the tally
-  always reconciles with the story count printed above it.
+- **The date as the largest object on the page**, set across the full measure,
+  because "one day, one page" is the claim the whole sheet rests on.
+- **A walk across the day**, hour by hour from a board meeting before dawn in
+  Wellington to the closing bell in New York, so the day reads as a duration
+  rather than a list.
+- **Six hard figures**, each with a caption that says what is being counted.
+- **Three illustrated leads**: Nvidia reinstating Jensen Huang and the 31.5%
+  jump; COP31 closing in Antalya with no agreement; three tankers mined in the
+  Strait of Hormuz.
+- **Nine further cards** and **fourteen single-line briefs**, every one of them
+  numbered, so the total printed at the top can be counted against the page.
+- **A region ledger** whose counts are computed from the story list, so the
+  ledger always reconciles with the story count.
+- **A date check**: the stories that were left out and why. Two events that
+  looked like the day's news turned out not to be — a quake that happened in
+  December 2025, and a factory fire from the 23rd — and the page says so
+  instead of quietly dropping them.
 
-Claims made by a government or an outlet are attributed on the page rather than
-asserted: the IRGC's account of the Hormuz mining is marked unverified, and the
-ICJ's Rohingya finding is noted as binding only the parties before it.
+Every story carries a status tag. `CONFIRMED` is a fact on the record or a
+number published by the body that keeps it. `OFFICIAL` is a named authority's
+own statement. `REPORTED` is newsroom reporting. `CLAIM` is one party's
+assertion, shown as that party's assertion — the Hormuz mining is the IRGC's
+account, and the page does not promote it to fact.
 
 ## How it is built
 
-`render/facts.py` holds the day's reporting. `render/page.py` composes the page
-with Pillow, from primitives only, and asserts two things that would otherwise
-fail silently: every wrapped line of text is actually drawn (nothing is clipped
-mid-sentence), and the region index sums exactly to the story count. `main.py` is
-the entrypoint the grader runs — standard library only, no network — and copies
-the committed image to the output directory.
+`render/facts.py` holds the day's reporting. `render/artwork.py` draws a flat
+symbol per category from primitives — no photographs, no font beyond the two the
+page loads. `render/page.py` composes the sheet and measures every band before
+it draws, so the build fails loudly rather than clip a sentence or run off the
+page. `main.py` is the entrypoint the grader runs — standard library only, no
+network — and copies the committed image to the output directory.
 
 ## Run it
 
